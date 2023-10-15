@@ -1,4 +1,3 @@
-// see SignupForm.js for comments
 import { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 
@@ -15,7 +14,7 @@ const LoginForm = () => {
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   // pass the mutation we'd like to execute to the useMutation hook
-  const [loginUser] = useMutation(LOGIN_USER);
+  const [login] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -33,15 +32,10 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await loginUser(userFormData);
-
-      if (!response.ok) {
-        throw new Error("something went wrong!");
-      }
-
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      const { data } = await login({
+        variables: { ...userFormData },
+      });
+      Auth.login(data.login.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
