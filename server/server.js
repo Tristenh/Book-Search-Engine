@@ -1,9 +1,8 @@
 const express = require("express");
 // Import the ApolloServer class
 const { ApolloServer } = require("@apollo/server");
-const { expressMiddleware } = require("@apollo/server/express");
+const { expressMiddleware } = require("@apollo/server/express4");
 const path = require("path");
-
 // Import the two parts of a GraphQL schema
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
@@ -32,7 +31,7 @@ const startApolloServer = async () => {
   // if we're in production, serve client/build as static assets
   if (process.env.NODE_ENV === "production") {
     // Serve static files from the client-side build directory
-    app.use(express.static(path.join(__dirname, "../client/build")));
+    app.use(express.static(path.join(__dirname, "../client/dist")));
 
     // Handle any other routes by serving the main index.html
     app.get("*", (req, res) => {
