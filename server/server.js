@@ -1,12 +1,12 @@
 const express = require("express");
 // Import the ApolloServer class
+const path = require("path");
+const db = require("./config/connection");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
-const path = require("path");
 // Import the two parts of a GraphQL schema
 const { typeDefs, resolvers } = require("./schemas");
 const { authMiddleware } = require("./utils/auth");
-const db = require("./config/connection");
 // create a express app
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -14,7 +14,6 @@ const PORT = process.env.PORT || 3001;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: authMiddleware,
 });
 
 // Create a new instance of an Apollo server with the GraphQL schema
@@ -25,9 +24,12 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   // launch Apollo server using the expressMiddleware on a specific route, you can call the route anything
-  app.use("/graphql", expressMiddleware(server), {
-    context: authMiddleware,
-  });
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: authMiddleware,
+    })
+  );
 
   // if we're in production, serve client/build as static assets
   if (process.env.NODE_ENV === "production") {
