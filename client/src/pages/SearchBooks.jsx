@@ -71,11 +71,11 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook(bookToSave, token);
+      const response = await saveBook({ variables: { ...bookToSave } });
 
-      if (!response.ok) {
-        throw new Error("something went wrong!");
-      }
+      // if (!response.ok) {
+      //   throw new Error("something went wrong!");
+      // }
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
@@ -120,8 +120,8 @@ const SearchBooks = () => {
         <Row>
           {searchedBooks.map((book) => {
             return (
-              <Col md="4" key={book.bookId}>
-                <Card border="dark">
+              <Col md="4">
+                <Card key={book.bookId} border="dark">
                   {book.image ? (
                     <Card.Img
                       src={book.image}

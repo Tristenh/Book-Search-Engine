@@ -8,12 +8,12 @@ type User {
 }
 
   type Book {
-    bookId: ID!
-    authors: [String]!
-    description: String!
-    title: String!
-    image: String!
-    link: String!
+    bookId: ID
+    authors: [String]
+    description: String
+    title: String
+    image: String
+    link: String
   }
 
   type Auth {
@@ -29,8 +29,8 @@ type User {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
 
-    saveBook( authors: [String]!
-    description: String! title: String! bookId: ID! image: String!): User
+    saveBook( authors: [String]
+    description: String title: String bookId: ID! image: String): User
     removeBook(bookId: ID!): User
 
   }

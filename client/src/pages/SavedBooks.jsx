@@ -1,6 +1,6 @@
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
-
 import Auth from "../utils/auth";
+
 import { removeBookId } from "../utils/localStorage";
 // import the useQuery & useMutation hook from @apollo/client
 import { useQuery, useMutation } from "@apollo/client";
@@ -19,9 +19,18 @@ const SavedBooks = () => {
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-    try {
-      await removeBook({ variables: { bookId: bookId } });
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
 
+    if (!token) {
+      return false;
+    }
+
+    try {
+      await removeBook({
+        variables: { bookId: bookId },
+      });
+
+      // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
@@ -51,7 +60,7 @@ const SavedBooks = () => {
         <Row>
           {userData.savedBooks.map((book) => {
             return (
-              <Col key={book.bookId} md="4">
+              <Col md="4">
                 <Card key={book.bookId} border="dark">
                   {book.image ? (
                     <Card.Img
